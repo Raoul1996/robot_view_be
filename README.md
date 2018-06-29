@@ -6,5 +6,9 @@
 
 ```python
 pip install -r ./requirement.txt
-python manage.py runserver
+```
+# Run
+
+```python
+python manage.py runserver 0.0.0.0 8080
 ```
