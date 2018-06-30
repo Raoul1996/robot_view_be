@@ -1,25 +1,23 @@
-import json
-
-from django.urls import reverse
-from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.backends import ModelBackend
-from django.views.generic.base import View
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
 
-from .models import UserProfile, EmailVerifyRecord
-from .forms import LoginForm, RegisterForm, ActiveForm
+from .models import UserProfile
+from .serializers import UserProfileSerializer
 
 
-class RegisterView(View):
-    def get(self, request, active_code):
-        all_record = EmailVerifyRecord.objects.filter(code=active_code)
-        active_Form = ActiveForm(request.GET)
-        if all_record:
-            for record in all_record:
-                email = record.email
-                user = UserProfile.objects.get(email=email)
-                user.is_active = True
-                user.save()
-                return HttpResponse
+class JSONResponse(HttpResponse):
+    def __init__(self, data, **kwargs):
+        content = JSONRenderer().render(data)
+        kwargs['content_type'] = 'application/json'
+        super(JSONResponse, self).__init__(content, **kwargs)
+
+
+@csrf_exempt
+def user_list(request):
+    if request.method == 'GET':
+        profile = UserProfile.objects.all()
+        serializer = UserProfileSerializer(profile, many=True)
+        return JSONResponse(serializer.data)

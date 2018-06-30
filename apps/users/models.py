@@ -14,6 +14,7 @@ class UserProfile(AbstractUser):
     nick_name = models.CharField(max_length=50, verbose_name=u"昵称", default="")
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, verbose_name=u"性别", default="female")
     mobile = models.CharField(max_length=11, null=True, blank=True, verbose_name=u"电话")
+    email = models.CharField(max_length=50, verbose_name=u"邮箱")
     image = models.ImageField(upload_to="image/%Y/%m", default=u"image/default.png", max_length=100, verbose_name=u"头像")
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
 
