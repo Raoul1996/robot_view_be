@@ -105,3 +105,5 @@ venv.bak/
 
 # editor file
 .idea/
+# pg data
+data/pg

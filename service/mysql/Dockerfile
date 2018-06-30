@@ -1,0 +1,4 @@
+FROM mysql:5.7.19
+MAINTAINER Dockerfiles
+
+EXPOSE 3306

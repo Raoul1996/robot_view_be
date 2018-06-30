@@ -1,0 +1,27 @@
+version: '3'
+services:
+  robot:
+    restart: always
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    links:
+      - db
+    command: bash -c "python3 /home/docker/code/manage.py migrate && python3 /home/docker/code/manage.py runserver 0.0.0.0:8000"
+
+  db:
+    restart: always
+    image: postgres
+    volumes:
+      - ./data/pg/:/var/lib/postgresql/data
+    expose:
+      - "5432"
+#    volumes:
+#      - ./service/mysql/conf.d:/etc/mysql/conf.d
+#      - ./service/mysql/data/:/var/lib/mysql
+#    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+#    environment:
+#       MYSQL_ROOT_PASSWORD: "neuq_django"
+#       MYSQL_DATABASE: "robot"

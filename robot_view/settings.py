@@ -87,11 +87,12 @@ WSGI_APPLICATION = 'robot_view.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'robot',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': '127.0.0.1'
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        # 'PASSWORD': 'neuq_django',
+        'HOST': 'db',
+        'PORT': 5432
     }
 }
 
