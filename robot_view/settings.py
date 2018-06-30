@@ -61,7 +61,7 @@ REST_FRAMEWORK = {
 }
 
 ROOT_URLCONF = 'robot_view.urls'
-AUTH_USER_MODEL = "users.UserProfile"
+AUTH_USER_MODEL = "users.User"
 
 TEMPLATES = [
     {

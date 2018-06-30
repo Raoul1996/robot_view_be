@@ -6,7 +6,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-class UserProfile(AbstractUser):
+class User(AbstractUser):
     GENDER_CHOICES = (
         ("male", u"男"),
         ("female", u"女"),

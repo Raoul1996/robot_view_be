@@ -2,13 +2,16 @@
 
 > robot attachment viewer backend
 
-# Install
+### Install
 
 ```python
 pip install -r ./requirement.txt
 ```
-# Run
+### Run
 
 ```python
 python manage.py runserver 0.0.0.0 8080
 ```
+
+### Info
+1. [deployment via docker, nginx and uwsgi](https://github.com/yiyuhao/SanHui/tree/master/docker)
