@@ -6,4 +6,10 @@ from .models import UserProfile, EmailVerifyRecord
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('nick_name', 'gender', 'mobile', 'email', 'image')
+        fields = ('id', 'nick_name', 'username', 'gender', 'mobile', 'email', 'image')
+
+
+class EmailVerifySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailVerifyRecord
+        field = ('code', 'email')
