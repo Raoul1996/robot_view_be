@@ -9,7 +9,7 @@ services:
       - db
     links:
       - db
-    command: bash -c "python3 /code/manage.py migrate && python3 /code/manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python3  /code/manage.py makemigrations snippets && python3 /code/manage.py migrate && python3 /code/manage.py runserver 0.0.0.0:8000"
 
   db:
     restart: always

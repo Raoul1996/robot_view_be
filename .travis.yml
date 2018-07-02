@@ -19,9 +19,8 @@ script:
 - pytest
 after_success:
 - ssh $server 'git clone https://github.com/Raoul1996/robot_view_be.git /usr/share/nginx/html/robot_view'
-- ssh $server 'cd /usr/share/nginx/html/robot_view && git checkout prod && git pull --rebase && sudo docker-compose stop'
-- ssh $server 'cd /usr/share/nginx/html/robot_view && sudo docker-compose build &&
-  sudo docker-compose up -d'
+- ssh $server 'cd /usr/share/nginx/html/robot_view && git checkout prod && git reset --hard origin/prod && git pull --rebase '
+- ssh $server 'cd /usr/share/nginx/html/robot_view && sudo docker-compose build && sudo docker-compose stop && sudo docker-compose up -d'
 - ssh $server 'sudo docker container prune -f && sudo docker image prune -f'
 after_script: 
 branches:
