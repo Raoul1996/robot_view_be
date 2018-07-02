@@ -1,0 +1,32 @@
+language: python
+addons:
+  apt:
+    packages:
+      - python-logilab-common
+python:
+- '3.3'
+before_install:
+- mkdir -p  ~/.ssh/
+- openssl aes-256-cbc -K $encrypted_47678c66fc43_key -iv $encrypted_47678c66fc43_iv
+  -in id_rsa.enc -out ~/.ssh/id_rsa -d
+- chmod 600 ~/.ssh/id_rsa
+- echo -e "Host 123.207.252.230 \n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- git checkout prod
+install:
+- pip install -r requirements.txt
+- pip install pytest
+script:
+- pytest
+after_success:
+- ssh $server 'git clone https://github.com/Raoul1996/robot_view_be.git /usr/share/nginx/html/robot_view'
+- ssh $server 'cd /usr/share/nginx/html/robot_view && git checkout prod && git pull --rebase && sudo docker-compose stop'
+- ssh $server 'cd /usr/share/nginx/html/robot_view && sudo docker-compose build &&
+  sudo docker-compose up -d'
+- ssh $server 'sudo docker container prune -f && sudo docker image prune -f'
+after_script: 
+branches:
+  only:
+  - prod
+env:
+  global:
+  - server="ubuntu@123.207.252.230"

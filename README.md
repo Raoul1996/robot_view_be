@@ -2,6 +2,8 @@
 
 > robot attachment viewer backend
 
+[![Build Status](https://travis-ci.org/Raoul1996/robot_view_be.svg?branch=master)](https://travis-ci.org/Raoul1996/robot_view_be)
+
 ### Install
 
 ```python

@@ -8,6 +8,7 @@ RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
         git \
+        supervisor \
         nginx &&\
     rm -rf /var/lib/apt/lists/*
 
@@ -25,13 +26,13 @@ COPY service/django-uwsgi-nginx/supervisor-app.conf /etc/supervisor/conf.d/
 
 # install the three-part lib
 
-COPY requirements.txt /home/docker/code/robot/
-RUN pip3 install -r /home/docker/code/robot/requirements.txt
+COPY requirements.txt /code/robot/
+RUN pip3 install -r /code/robot/requirements.txt
 
 # uwsgi.ini and uwsgi_params
 
-COPY . /home/docker/code/
+COPY . /code/
 
 EXPOSE 8000
 
-#CMD ["python3", "/home/docker/code/manage.py","migrate"]
+CMD ["supervisord", "-n"]
