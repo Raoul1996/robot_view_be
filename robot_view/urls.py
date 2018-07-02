@@ -22,11 +22,10 @@ router = routers.DefaultRouter(trailing_slash=True)
 
 router.register(r'auth_users', UserViewSet)
 router.register(r'auth_groups', GroupViewSet)
-
 urlpatterns = [
     path('', include(router.urls)),
-    path('users/', include('users.urls')),
-    path('snippet/', include('snippets.urls')),
+    # path('users/', include('bak.users.urls')),
+    path('snippets/', include('snippets.urls')),
     path('admin/', admin.site.urls),
-    path('api-auth', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

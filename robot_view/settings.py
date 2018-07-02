@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'users',
     'api_auth',
     'snippets'
 ]
@@ -62,7 +61,7 @@ REST_FRAMEWORK = {
 }
 
 ROOT_URLCONF = 'robot_view.urls'
-AUTH_USER_MODEL = "users.User"
+# AUTH_USER_MODEL = "users.User"
 
 TEMPLATES = [
     {
