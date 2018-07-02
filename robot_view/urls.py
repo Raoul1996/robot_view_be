@@ -16,16 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from api_auth.views import UserViewSet, GroupViewSet
+from rest_framework.urlpatterns import format_suffix_patterns
+# from api_auth.views import UserViewSet, GroupViewSet
 
-router = routers.DefaultRouter(trailing_slash=True)
-
-router.register(r'auth_users', UserViewSet)
-router.register(r'auth_groups', GroupViewSet)
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', include('snippets.urls')),
     # path('users/', include('bak.users.urls')),
-    path('snippets/', include('snippets.urls')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
