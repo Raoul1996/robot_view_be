@@ -23,7 +23,7 @@ or
 ```
 ## Run in Production env
 
-Please install the docker-compose before your use it.
+Please install the docker-compose before you use it.
 
 ```py
 docker-compose build && docker-compose up
@@ -42,7 +42,7 @@ use docker can make deploy more easy than before, and use the same system env ca
 
 1. create the [Dockerfile](Dockerfile) file
 2. Install the `docker-compose` command tools and create the [docker-compose.yml](docker-compose.yml) file
-3. run `docker-compose build` to build the web image and database image, use `docker-compose run` to run these container
+3. run `docker-compose build` to build the web image and database image, use `docker-compose run` to run these containers
 
 ### use travis-ci to deploy the application automatic
 1. login travis-ci and add the current repos on github
@@ -54,7 +54,7 @@ travis encrypt-file ~/.ssh/id_rsa --add
 ```
 ### split the settings file for dev env and production env
 
-because I prefer use mysql database in the dev env, and use postgres in production env in docker container, so split the settings is very important.
+because I prefer using mysql database in the dev env, and use postgres in production env in docker container, so split the settings is very important.
 there are many blog can search form google, just use the simplest method.
 
 1. create the [`dev_settings.py`](robot_view/dev_settings.py)
@@ -65,7 +65,7 @@ there are many blog can search form google, just use the simplest method.
 ### move app to apps path
 if app has very huge number, leave them in the project root path is not a smart choice, so create the `apps` path to store them
 
-1. change the [`settings.py`](robot_view/settings.py), to configure the apps as resource path
+1. modify the [`settings.py`](robot_view/settings.py), to configure the apps as resource path
 
 ```py
 + import os
@@ -82,7 +82,7 @@ if app has very huge number, leave them in the project root path is not a smart 
 ```shell
 pip3 install -r /code/robot/requirements.txt -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
 ```
-if use docker, change the [Dockerfile](Dockerfile)
+if use docker, modify the [Dockerfile](Dockerfile)
 
 ```Dockerfile
 - RUN pip3 install -r /code/robot/requirements.txt
