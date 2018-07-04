@@ -27,7 +27,7 @@ COPY service/django-uwsgi-nginx/supervisor-app.conf /etc/supervisor/conf.d/
 # install the three-part lib
 
 COPY requirements.txt /code/robot/
-RUN pip3 install -r /code/robot/requirements.txt
+RUN pip3 install -r /code/robot/requirements.txt -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
 
 # uwsgi.ini and uwsgi_params
 
