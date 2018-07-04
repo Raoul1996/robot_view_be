@@ -59,12 +59,8 @@ jobs:
           command: |
             . venv/bin/activate
             python manage.py test --settings=robot_view.test_settings
-<<<<<<< HEAD
       - store_test_results:
           path: test-reports
-=======
-
->>>>>>> 0a2f7fb... spilt the test settings
       - store_artifacts:
           path: test-reports
           destination: test-reports
