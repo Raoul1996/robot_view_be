@@ -27,7 +27,7 @@ SECRET_KEY = 'v#om*=omx1jal86nx0rkyhf!28y8c0*$7h%rc(c^vxdu((&a2&'
 DEBUG = False
 
 # Access-Control-Allow-Origin: *
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '.raoul1996.cn', '123.207.252.230', '10.186.25.40']
 
 # Application definition
 
@@ -128,5 +128,8 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [
+    # os.path.join(BASE_DIR, "static")
+]
 STATIC_URL = '/static/'

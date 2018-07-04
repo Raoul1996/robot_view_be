@@ -9,6 +9,7 @@ httpie==0.9.9
 idna==2.7
 Markdown==2.6.11
 mysqlclient==1.3.12
+olefile==0.45.1
 Pillow==5.0.0
 psycopg2-binary==2.7.5
 Pygments==2.2.0
@@ -17,3 +18,4 @@ requests==2.19.1
 six==1.11.0
 urllib3==1.23
 uWSGI==2.0.17
+whitenoise==3.3.1
