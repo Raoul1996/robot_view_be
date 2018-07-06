@@ -1,5 +1,11 @@
+# virtal env include the python 3.6、site dependencies and pip
 venv/
+# editor files
 .idea/
 README.md
-service/mysql/data/*
+# store the data files in postgres container at prodution env
 data/
+# store the static files after run `python manage.py collectstatic`
+static/
+# sqlite3 database is used for testing in circle-ci
+db.sqlite3

@@ -110,6 +110,3 @@ data/pg
 
 # static files
 static/
-
-# migrations files
-apps/snippets/migrations/*
