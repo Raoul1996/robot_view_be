@@ -118,3 +118,16 @@ python manage.py collectstatic
 # -d option can make the process in daemon mode.
 docker-compose build && docker-compose up -d
 ```
+### and schema and docs
+
+django rest framework already support the docs and schema itself, just [include it and add a urlpatterns](apps/snippets/urls.py) is enough:
+
+```py
++ from rest_framework.schemas import get_schema_view
++ from rest_framework.documentation import include_docs_urls
+  urlpatterns = [
+    path('', include(router.urls)),
+    + path('schema/', schema_view),
+    + path('docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION))
+  ]
+```
