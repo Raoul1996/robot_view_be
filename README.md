@@ -2,8 +2,8 @@
 
 > robot attachment viewer backend
 
-[![Build Status](https://travis-ci.org/Raoul1996/robot_view_be.svg?branch=master)](https://travis-ci.org/Raoul1996/robot_view_be)
-
+[![Build Status](https://travis-ci.org/Raoul1996/robot_view_be.svg?branch=prod)](https://travis-ci.org/Raoul1996/robot_view_be)
+[![CircleCI](https://circleci.com/gh/Raoul1996/robot_view_be/tree/dev.svg?style=svg)](https://circleci.com/gh/Raoul1996/robot_view_be/tree/dev)
 ## Run in development env
 
 ### Install
