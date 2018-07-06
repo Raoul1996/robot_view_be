@@ -32,7 +32,7 @@ then visit the [localhost:8000](http://localhost:8000)
 
 ## Resource
 1. [deployment via docker, nginx and uwsgi](https://github.com/yiyuhao/SanHui/tree/master/docker)
-
+2. [使用 CircleCI 实现持续集成和持续部署](https://ruiming.me/continuous-integration-and-deployment/)
 ## Note
 
 ### add a [README.md] to typing your note and problem
