@@ -9,6 +9,7 @@ django-filter==1.1.0
 django-ranged-response==0.2.0
 django-simple-captcha==0.5.9
 djangorestframework==3.8.2
+djangorestframework-jwt==1.11.0
 httpie==0.9.9
 idna==2.7
 itypes==1.1.0
@@ -20,6 +21,7 @@ olefile==0.45.1
 Pillow==5.0.0
 psycopg2-binary==2.7.5
 Pygments==2.2.0
+PyJWT==1.6.4
 pytz==2018.4
 requests==2.19.1
 six==1.11.0
