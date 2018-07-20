@@ -59,7 +59,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
@@ -73,6 +73,9 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
+SMS_SEND_URL = "https://sms.yunpian.com/v2/sms/single_send.json"
+SMS_CONTENT_TEXT = "【罗伯特】你的验证码是{code}。如非本人操作，请忽略"
+API_KEY = ""
 ROOT_URLCONF = 'robot_view.urls'
 AUTH_USER_MODEL = "users.UserProfile"
 

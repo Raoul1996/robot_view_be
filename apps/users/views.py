@@ -13,13 +13,15 @@ from rest_framework import mixins, permissions, authentication
 from rest_framework import viewsets, status
 from .models import VerifyCode
 from .serializers import SMSSerializer, UserDetailSerializer, UserRegSerializer
+from utils.yunpian import YunPian
+from robot_view.settings import API_KEY
 
 User = get_user_model()
 
 
 class CustomBackend(ModelBackend):
     """
-    自定义用户验证规则
+    custom user validate rules
     """
 
     def authenticate(self, request, username=None, password=None, **kwargs):
@@ -39,6 +41,7 @@ class SMSCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
     @staticmethod
     def generate_code():
         """
+        generate a verify string which include 4 number
         生成四位数字的验证码字符串
         :return:
         """
@@ -53,10 +56,10 @@ class SMSCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         mobile = serializer.validated_data["mobile"]
-        # yun_pian = YunPian(APIKEY)
+        yun_pian = YunPian(API_KEY)
         code = self.generate_code()
-        # sms_status = yun_pian.send_sms(code=code,mobile=mobile)
-        sms_status = {'code': 0, 'msg': 'hello'}
+        sms_status = yun_pian.send_sms(code=code, mobile=mobile)
+        # example sms_status = {'code': 0, 'msg': 'hello'}
         if sms_status["code"] != 0:
             return Response({
                 "mobile": sms_status["msg"]
@@ -65,3 +68,56 @@ class SMSCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
             code_record = VerifyCode(code=code, mobile=mobile)
             code_record.save()
             return Response({"mobile": mobile}, status=status.HTTP_201_CREATED)
+
+
+class UserViewSets(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """
+    User ViewSet
+    """
+    serializer_class = UserRegSerializer
+    queryset = User.objects.all()
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+
+    def get_serializer_class(self):
+        """
+        get the current serializer class,
+        if the action type is create, return the register serializer
+        """
+        if self.action == "create":
+            return UserRegSerializer
+        return UserDetailSerializer
+
+    def get_permissions(self):
+        """
+        only the user who is authenticated can retrieve the user's detail.
+        """
+        if self.action == 'retrieve':
+            return [permissions.IsAuthenticated()]
+        return []
+
+    def create(self, request, *args, **kwargs):
+        """
+        rewrite the create function
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: Response:
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = self.perform_create(serializer=serializer)
+        re_dict = serializer.data
+        payload = jwt_payload_handler(user)
+        re_dict["token"] = jwt_encode_handler(payload)
+        re_dict["name"] = user.name if user.name else user.username
+        headers = self.get_success_headers(serializer.data)
+        return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
+
+    def get_object(self):
+        """
+        rewrite this function, only return the current user who send the request
+        """
+        return self.request.user
+
+    def perform_create(self, serializer):
+        return serializer.save()

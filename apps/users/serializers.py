@@ -11,7 +11,7 @@ User = get_user_model()
 
 class UserDetailSerializer(serializers.ModelSerializer):
     """
-    用户详情序列化
+    User Detail Serializer
     """
 
     class Meta:
@@ -20,6 +20,9 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
 
 class UserRegSerializer(serializers.ModelSerializer):
+    """
+    User Register Serializer
+    """
     code = serializers.CharField(required=True, write_only=True, max_length=4, min_length=4, error_messages={
         "blank": "code is not exist",
         "required": "code is not exist",
@@ -30,8 +33,10 @@ class UserRegSerializer(serializers.ModelSerializer):
                                      label="username",
                                      help_text="username",
                                      allow_blank=False,
-                                     validators=[UniqueValidator(queryset=User.objects.all(),
-                                                                 message="user is already exist.")])
+                                     validators=[UniqueValidator(
+                                         queryset=User.objects.all(),
+                                         message="user is already exist."
+                                     )])
     password = serializers.CharField(style={'input_type': 'password'},
                                      help_text="password",
                                      label="password",
@@ -44,11 +49,11 @@ class UserRegSerializer(serializers.ModelSerializer):
 
             five_minute_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
             if five_minute_ago > last_record.add_time:
-                raise serializers.ValidationError("verify_code is expired.")
+                raise serializers.ValidationError("verify code is expired.")
             if last_record.code != code:
-                raise serializers.ValidationError("verify_code is illegal.")
+                raise serializers.ValidationError("verify code is illegal.")
         else:
-            raise serializers.ValidationError("verify_code is illegal.")
+            raise serializers.ValidationError("verify code is illegal.")
 
     def validate(self, attrs):
         attrs["mobile"] = attrs["username"]
@@ -66,8 +71,10 @@ class SMSSerializer(serializers.ModelSerializer):
     @staticmethod
     def validate_mobile(mobile):
         """
+        verify mobile number (function name must be the  "validate_[field_name]")
         验证手机号码（函数名称必须是 validate_+ 字段名）
         """
+        # check mobile number
         # 手机是否注册
         if User.objects.filter(mobile=mobile).count():
             raise serializers.ValidationError("User already exist.")
