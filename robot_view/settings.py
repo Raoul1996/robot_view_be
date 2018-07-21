@@ -75,7 +75,7 @@ JWT_AUTH = {
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 SMS_SEND_URL = "https://sms.yunpian.com/v2/sms/single_send.json"
 SMS_CONTENT_TEXT = "【罗伯特】你的验证码是{code}。如非本人操作，请忽略"
-API_KEY = ""
+API_KEY = "robot_view"
 ROOT_URLCONF = 'robot_view.urls'
 AUTH_USER_MODEL = "users.UserProfile"
 
@@ -133,7 +133,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'zh-hans'
+LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'Asia/Shanghai'
 

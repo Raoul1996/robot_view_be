@@ -4,8 +4,8 @@ import requests
 from robot_view.settings import SMS_SEND_URL, SMS_CONTENT_TEXT
 
 
-class YunPian(str):
-    def __int__(self, api_key):
+class YunPian(object):
+    def __init__(self, api_key):
         self.api_key = api_key
         self.single_send_url = SMS_SEND_URL
 
@@ -15,8 +15,15 @@ class YunPian(str):
             "mobile": mobile,
             "text": SMS_CONTENT_TEXT.format(code=code)
         }
-        response = requests.post(self.single_send_url, data=params)
-        re_dict = json.loads(response.text)
+        # TODO: no api_key, so mock data
+        # response = requests.post(self.single_send_url, data=params)
+        # re_dict = json.loads(response.text)
+        re_dict = {'http_status_code': 200,
+                   'code': 0,
+                   'msg': '发送成功',
+                   'detail': params["text"]
+                   }
+        print(re_dict)
         return re_dict
 
 

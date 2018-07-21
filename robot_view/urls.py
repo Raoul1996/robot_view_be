@@ -14,10 +14,26 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 
+from rest_framework.documentation import include_docs_urls
+from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views
+from rest_framework_jwt.views import obtain_jwt_token
+
+from users.views import SMSCodeViewSet, UserViewSets
+
+router = DefaultRouter()
+
+router.register(r'users', UserViewSets, base_name='users')
+router.register(r'code', SMSCodeViewSet, base_name='code')
 urlpatterns = [
     # path('', include('snippets.urls')),
     # path('users/', include('bak.users.urls')),
-    path('admin/', admin.site.urls)
+    re_path('^', include(router.urls)),
+    path('docs/', include_docs_urls(title='robot_view documents')),
+    path('admin/', admin.site.urls),
+    path('login/', obtain_jwt_token),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api-token-auth/', views.obtain_auth_token)
 ]

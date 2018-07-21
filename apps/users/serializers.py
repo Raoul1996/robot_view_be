@@ -16,7 +16,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        field = ("username", "gender", "email", "mobile")
+        fields = "__all__"
 
 
 class UserRegSerializer(serializers.ModelSerializer):
@@ -62,7 +62,7 @@ class UserRegSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        field = ("username", "code", "mobile", "password")
+        fields = "__all__"
 
 
 class SMSSerializer(serializers.ModelSerializer):
@@ -87,3 +87,7 @@ class SMSSerializer(serializers.ModelSerializer):
         if VerifyCode.objects.filter(add_time__gt=one_minutes_ago, mobile=mobile).count():
             raise serializers.ValidationError("please send SMS later.")
         return mobile
+
+    class Meta:
+        model = VerifyCode
+        fields = "__all__"

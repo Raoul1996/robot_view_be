@@ -35,8 +35,9 @@ class CustomBackend(ModelBackend):
 
 class SMSCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
     """
-    发送短信验证码
+    send SMS Code
     """
+    serializer_class = SMSSerializer
 
     @staticmethod
     def generate_code():
