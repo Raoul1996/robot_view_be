@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
@@ -30,7 +30,7 @@ router.register(r'code', SMSCodeViewSet, base_name='code')
 urlpatterns = [
     # path('', include('snippets.urls')),
     # path('users/', include('bak.users.urls')),
-    re_path('^', include(router.urls)),
+    path('', include(router.urls)),
     path('docs/', include_docs_urls(title='robot_view documents')),
     path('admin/', admin.site.urls),
     path('login/', obtain_jwt_token),

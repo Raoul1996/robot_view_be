@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 SECRET_KEY = 'v#om*=omx1jal86nx0rkyhf!28y8c0*$7h%rc(c^vxdu((&a2&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Access-Control-Allow-Origin: *
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '.raoul1996.cn', '123.207.252.230', '10.186.25.40']
@@ -55,18 +55,18 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-    ],
+    ),
     'PAGE_SIZE': 10,
-    'DEFAULT_PAGINATION_CLASS': [
+    'DEFAULT_PAGINATION_CLASS': (
         'rest_framework.pagination.PageNumberPagination'
-    ]
+    )
 }
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3600),
@@ -147,7 +147,4 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-STATICFILES_DIRS = [
-    # os.path.join(BASE_DIR, "static")
-]
 STATIC_URL = '/static/'
