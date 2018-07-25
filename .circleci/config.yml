@@ -42,7 +42,7 @@ jobs:
           name: make makemigrations
           command: |
             . venv/bin/activate
-            python manage.py makemigrations snippets --settings=robot_view.test_settings
+            python manage.py makemigrations users --settings=robot_view.test_settings
       - run:
           name: migrate
           command: |
