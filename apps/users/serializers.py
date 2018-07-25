@@ -46,7 +46,7 @@ class UserRegSerializer(serializers.ModelSerializer):
         verify_records = VerifyCode.objects.filter(mobile=self.initial_data["username"]).order_by("-add_time")
         if verify_records:
             last_record = verify_records[0]
-
+            # set the verify code expire time. now is 5 minutes.
             five_minute_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
             if five_minute_ago > last_record.add_time:
                 raise serializers.ValidationError("verify code is expired.")

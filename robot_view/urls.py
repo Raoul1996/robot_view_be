@@ -28,8 +28,6 @@ router = DefaultRouter()
 router.register(r'users', UserViewSets, base_name='users')
 router.register(r'code', SMSCodeViewSet, base_name='code')
 urlpatterns = [
-    # path('', include('snippets.urls')),
-    # path('users/', include('bak.users.urls')),
     path('', include(router.urls)),
     path('docs/', include_docs_urls(title='robot_view documents')),
     path('admin/', admin.site.urls),

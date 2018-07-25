@@ -30,6 +30,12 @@ DEBUG = True
 # Access-Control-Allow-Origin: *
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '.raoul1996.cn', '123.207.252.230', '10.186.25.40']
 
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+    'django.contrib.auth.backends.ModelBackend'
+)
+AUTH_USER_MODEL = "users.UserProfile"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -59,7 +65,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
@@ -74,10 +79,9 @@ JWT_AUTH = {
 }
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 SMS_SEND_URL = "https://sms.yunpian.com/v2/sms/single_send.json"
-SMS_CONTENT_TEXT = "【罗伯特】你的验证码是{code}。如非本人操作，请忽略"
+SMS_CONTENT_TEXT = "【Robot】your verify code is {code}. thx for use robot view service."
 API_KEY = "robot_view"
 ROOT_URLCONF = 'robot_view.urls'
-AUTH_USER_MODEL = "users.UserProfile"
 
 TEMPLATES = [
     {

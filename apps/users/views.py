@@ -2,7 +2,6 @@ from random import choice
 
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
-from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
@@ -47,10 +46,11 @@ class SMSCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
         :return:
         """
         seeds = "1234567890"
-        random_str = []
-        for i in range(4):
-            random_str.append(choice(seeds))
-
+        # TODO: Application SMS SDK
+        random_str = ['1', '2', '3', '4']
+        # random_str = []
+        # for i in range(4):
+        #     random_str.append(choice(seeds))
         return "".join(random_str)
 
     def create(self, request, *args, **kwargs):

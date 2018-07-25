@@ -4,7 +4,6 @@
 
 [![Build Status](https://travis-ci.org/Raoul1996/robot_view_be.svg?branch=prod)](https://travis-ci.org/Raoul1996/robot_view_be)
 [![CircleCI](https://circleci.com/gh/Raoul1996/robot_view_be/tree/dev.svg?style=svg)](https://circleci.com/gh/Raoul1996/robot_view_be/tree/dev)
-## Run in development env
 
 ## Run in development env
 
@@ -133,3 +132,47 @@ django rest framework already support the docs and schema itself, just [include 
     + path('docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION))
   ]
 ```
+### Fix list is not callable
+
+After configure the router for user app, in development env, app can work very will, when build docker container, app throw a error: **list object is not callable**
+
+Solution is very easy: use the tuple, don't use list.
+
+```py
+# robot_view/setting.py
+REST_FRAMEWORK = {
+     # Use Django's standard `django.contrib.auth` permissions,
+     # or allow read-only access for unauthenticated users.
+   -  'DEFAULT_PERMISSION_CLASSES': [
+   +  'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+   + ),
+   - ),
+   - 'DEFAULT_AUTHENTICATION_CLASSES': [
+   + 'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+   + ),
+   - ],
+     'PAGE_SIZE': 10,
+   + 'DEFAULT_PAGINATION_CLASS': [
+   - 'DEFAULT_PAGINATION_CLASS': (
+        'rest_framework.pagination.PageNumberPagination'
+   + )
+   - ]
+}
+```
+### Change authorization method to JWT
+
+- edit [setting.py](./robot_view/setting.py), and the `AUTHENTICATION_BACKENDS`
+
+    ```py
+    AUTHENTICATION_BACKENDS = (
+        'users.views.CustomBackend',
+        'django.contrib.auth.backends.ModelBackend'
+    )
+    ```
+
+- post the `username` and `password` to [http://127.0.0.1:8001/login/](http://127.0.0.1:8001/login/) to exchange the jwt
+- and `Authorization` request header and `Bearer` prefix for jwt string
