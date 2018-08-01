@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'users'
+    'django_thrift',
+    'users',
+    'robot',
 ]
 
 MIDDLEWARE = [
@@ -76,6 +78,10 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3600),
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+}
+THRIFT = {
+    "FILE": "apps/robot/robot_data.thrift",
+    "SERVICE": "RobotReceiver",
 }
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 SMS_SEND_URL = "https://sms.yunpian.com/v2/sms/single_send.json"

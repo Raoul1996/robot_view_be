@@ -105,6 +105,7 @@ venv.bak/
 
 # editor file
 .idea/
+.vscode/
 # pg data
 data/pg
 

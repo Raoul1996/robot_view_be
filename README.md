@@ -176,3 +176,43 @@ REST_FRAMEWORK = {
 
 - post the `username` and `password` to [http://127.0.0.1:8001/login/](http://127.0.0.1:8001/login/) to exchange the jwt
 - and `Authorization` request header and `Bearer` prefix for jwt string
+
+### Create thrift server in Django app
+
+for rpc, I choose to use apache thrift framework
+
+- install `django-thrift`:
+
+    ```shell
+    pip install django-thrift
+    ```
+- configure `django-thrift` in [setting.py](./robot_view/setting.py)
+    - add `'django_thrift'` in `INSTALLED_APPS`
+    - add `THRIFT` configure option in [setting.py](./robot_view/setting.py)
+    - add `FILE` option in `THRIFT` point to `*.thrift` file
+    - add `SERVICE` option named is the same to the `thrift` server name
+
+- write the thrift handler in django app `view`:
+
+    ```py
+    # import the create_handler
+    from django_thrift.handler import create_handler
+
+    # get a handler instantiation
+    handler = create_handler()
+
+    # defined the thrift method
+    @handler.map_function("saveRobotData")
+    def save_robot_data_handler():
+        return {"a": "bb"}
+
+    # more thrift methods can be defined
+    ```
+
+- management thrift server on localhost 9090
+
+    ```shell
+    # start rpc server
+    python manage.py runrpcserver
+    ```
+
