@@ -1,16 +1,5 @@
 version: '3'
 services:
-  robot:
-    restart: always
-    build: .
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    links:
-      - db
-    command: bash -c "python3 /code/manage.py collectstatic  --noinput && python3  /code/manage.py makemigrations users && python3 /code/manage.py migrate && python3 /code/manage.py runserver 0.0.0.0:8000"
-
   db:
     restart: always
     image: postgres
@@ -27,3 +16,14 @@ services:
 #    environment:
 #       MYSQL_ROOT_PASSWORD: "neuq_django"
 #       MYSQL_DATABASE: "robot"
+  robot:
+    restart: always
+    build: .
+    ports:
+      - "8000:8000"
+      - "9090:9090"
+    depends_on:
+      - db
+    links:
+      - db
+    command: bash -c "python3 /code/manage.py collectstatic  --noinput && python3  /code/manage.py makemigrations users robot && python3 /code/manage.py migrate && (python3 /code/manage.py runserver 0.0.0.0:8000 & python3 /code/manage.py runrpcserver )"

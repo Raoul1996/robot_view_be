@@ -17,6 +17,7 @@ import datetime
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -80,8 +81,12 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
 THRIFT = {
-    "FILE": "apps/robot/robot_data.thrift",
+    "FILE": os.path.join(BASE_DIR, "apps/robot/robot_data.thrift"),
     "SERVICE": "RobotReceiver",
+}
+DJANGO_SETTINGS_MODULE = {
+    "host": "0.0.0.0",
+    "port": 9091
 }
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 SMS_SEND_URL = "https://sms.yunpian.com/v2/sms/single_send.json"

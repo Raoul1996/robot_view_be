@@ -33,6 +33,6 @@ RUN pip3 install -r /code/robot/requirements.txt -i http://pypi.douban.com/simpl
 
 COPY . /code/
 
-EXPOSE 8000
+EXPOSE 8000 9090
 
 CMD ["supervisord", "-n"]
