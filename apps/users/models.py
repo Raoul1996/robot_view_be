@@ -8,7 +8,7 @@ class UserProfile(AbstractUser):
     用户表，新增字段
     """
     GENDER_CHOICES = (
-        ("mail", "mail"), ("female", "female")
+        ("male", "male"), ("female", "female")
     )
     name = models.CharField(max_length=30, null=True, blank=True, verbose_name="name")
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default="female", verbose_name="gender")

@@ -1,6 +1,7 @@
 import re
 from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
 from robot_view.settings import REGEX_MOBILE
@@ -43,7 +44,7 @@ class UserRegSerializer(serializers.ModelSerializer):
                                      write_only=True)
 
     def validate_code(self, code):
-        verify_records = VerifyCode.objects.filter(mobile=self.initial_data["username"]).order_by("-add_time")
+        verify_records = VerifyCode.objects.filter(mobile=self.initial_data["mobile"]).order_by("-add_time")
         if verify_records:
             last_record = verify_records[0]
             # set the verify code expire time. now is 5 minutes.
@@ -56,7 +57,8 @@ class UserRegSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("verify code is illegal.")
 
     def validate(self, attrs):
-        attrs["mobile"] = attrs["username"]
+        attrs["raw_password"] = attrs["password"]
+        attrs["password"] = make_password(attrs["password"])
         del attrs["code"]
         return attrs
 
@@ -90,4 +92,4 @@ class SMSSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VerifyCode
-        fields = "__all__"
+        fields = ['mobile']

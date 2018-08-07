@@ -9,24 +9,24 @@
 
 ### Install
 
-```py
+```bash
 pip3 install -r ./requirement.txt
 ```
 ### Run
 
-```py
+```bash
 python3 manage.py runserver --settings=robot_view.dev_settings
 ```
 or
 
-```py
+```bash
 ./dev_robot.sh
 ```
 ## Run in Production env
 
 Please install the docker-compose before you use it.
 
-```py
+```bash
 docker-compose build && docker-compose up
 ```
 then visit the [localhost:8000](http://localhost:8000)
@@ -68,7 +68,7 @@ if app has very huge number, leave them in the project root path is not a smart 
 
 1. modify the [`settings.py`](robot_view/settings.py), to configure the apps as resource path
 
-```py
+```python
 + import os
   import sys
 
@@ -102,7 +102,7 @@ pip install whitenoise
 # export the dependencies in requirements.txt
 pip freeze > ./requirements.txt
 ```
-```py
+```python
 + from whitenoise.django import DjangoWhiteNoise
 + application = DjangoWhiteNoise(application)
 ```
@@ -123,7 +123,7 @@ docker-compose build && docker-compose up -d
 
 django rest framework already support the docs and schema itself, just [include it and add a urlpatterns](apps/snippets/urls.py) is enough:
 
-```py
+```python
 + from rest_framework.schemas import get_schema_view
 + from rest_framework.documentation import include_docs_urls
   urlpatterns = [
@@ -138,7 +138,7 @@ After configure the router for user app, in development env, app can work very w
 
 Solution is very easy: use the tuple, don't use list.
 
-```py
+```python
 # robot_view/setting.py
 REST_FRAMEWORK = {
      # Use Django's standard `django.contrib.auth` permissions,
@@ -167,7 +167,7 @@ REST_FRAMEWORK = {
 
 - edit [setting.py](./robot_view/setting.py), and the `AUTHENTICATION_BACKENDS`
 
-    ```py
+    ```python
     AUTHENTICATION_BACKENDS = (
         'users.views.CustomBackend',
         'django.contrib.auth.backends.ModelBackend'
@@ -186,15 +186,15 @@ for rpc, I choose to use apache thrift framework
     ```shell
     pip install django-thrift
     ```
-- configure `django-thrift` in [setting.py](./robot_view/setting.py)
+- configure `django-thrift` in [setting.py](robot_view/settings.py)
     - add `'django_thrift'` in `INSTALLED_APPS`
-    - add `THRIFT` configure option in [setting.py](./robot_view/setting.py)
+    - add `THRIFT` configure option in [setting.py](/robot_view/settings.py)
     - add `FILE` option in `THRIFT` point to `*.thrift` file
     - add `SERVICE` option named is the same to the `thrift` server name
 
 - write the thrift handler in django app `view`:
 
-    ```py
+    ```python
     # import the create_handler
     from django_thrift.handler import create_handler
 
@@ -215,4 +215,38 @@ for rpc, I choose to use apache thrift framework
     # start rpc server
     python manage.py runrpcserver
     ```
+### Create extra_app folder to store the library which have to modify the source code
 
+Because I need change the thrift server listen host and port, but `django-thrift` library can't support change these in `setting.py`, so I have to modify the source code of this library.
+
+- create `extra_app` folder
+
+    ```shell
+    mkdir extra_app
+    ```
+- move the `django-thrift` library from `site-package` to `extra-app`:
+
+    ```shell
+    mv to_your_site_package_path/django-thrift extra_app
+    ```
+- add `extra-app` in `PYTHONPATH` via modify the [setting.py](robot_view/settings.py)
+
+    ```python
+    + sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
+    ```
+- modify the `django-thrift` source code what you want to edit.
+
+### save password as django command 'createsuperuser'
+
+before I do these, only the user which create via django manage.py command `createsuperuser` can generate current JSON WEB Token. So I want to know why.
+
+the user Profile data store in `users_userporfile` table, the password field which user is created by command is encrypted, so I need use the same methods to encrypt the password before save it in database.
+
+search in django source code, I find the [`make_password`](https://github.com/django/django/blob/stable%2F2.0.x/django/contrib/auth/hashers.py#L64) function, and when use create superuser, the manage.py don't provide the **salt**, so just use the like [base_user.py](https://github.com/django/django/blob/stable%2F2.0.x/django/contrib/auth/base_user.py#L97):
+
+```python
+def validate(self, attrs):
+    attrs["raw_password"] = attrs["password"]
+    attrs["password"] = make_password(attrs["password"])
+    return attrs
+```

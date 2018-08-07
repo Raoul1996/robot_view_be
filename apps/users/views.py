@@ -6,10 +6,12 @@ from django.contrib.auth import get_user_model
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
 
+from rest_framework import permissions
+from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.mixins import CreateModelMixin
-from rest_framework import mixins, permissions, authentication
-from rest_framework import viewsets, status
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, RetrieveModelMixin
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.viewsets import GenericViewSet
 from .models import VerifyCode
 from .serializers import SMSSerializer, UserDetailSerializer, UserRegSerializer
 from utils.yunpian import YunPian
@@ -32,7 +34,7 @@ class CustomBackend(ModelBackend):
             return None
 
 
-class SMSCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
+class SMSCodeViewSet(CreateModelMixin, GenericViewSet):
     """
     send SMS Code
     """
@@ -71,13 +73,13 @@ class SMSCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
             return Response({"mobile": mobile}, status=status.HTTP_201_CREATED)
 
 
-class UserViewSets(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class UserViewSets(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, GenericViewSet):
     """
     User ViewSet
     """
     serializer_class = UserRegSerializer
     queryset = User.objects.all()
-    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
 
     def get_serializer_class(self):
         """

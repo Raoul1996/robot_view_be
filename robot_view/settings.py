@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_thrift',
     'users',
+    'info',
     'robot',
 ]
 

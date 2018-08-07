@@ -22,11 +22,13 @@ from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 
 from users.views import SMSCodeViewSet, UserViewSets
+from info.views import RobotInfoViewSet
 
 router = DefaultRouter()
 
 router.register(r'users', UserViewSets, base_name='users')
 router.register(r'code', SMSCodeViewSet, base_name='code')
+router.register(r'info',RobotInfoViewSet, base_name='info')
 urlpatterns = [
     path('', include(router.urls)),
     path('docs/', include_docs_urls(title='robot_view documents')),

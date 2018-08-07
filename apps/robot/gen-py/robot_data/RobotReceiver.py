@@ -32,6 +32,14 @@ class Iface(object):
         """
         pass
 
+    def RobotInfo(self, RobotID, RobotInfo):
+        """
+        Parameters:
+         - RobotID
+         - RobotInfo
+        """
+        pass
+
 
 class Client(Iface):
     def __init__(self, iprot, oprot=None):
@@ -123,6 +131,39 @@ class Client(Iface):
             return result.success
         raise TApplicationException(TApplicationException.MISSING_RESULT, "say failed: unknown result")
 
+    def RobotInfo(self, RobotID, RobotInfo):
+        """
+        Parameters:
+         - RobotID
+         - RobotInfo
+        """
+        self.send_RobotInfo(RobotID, RobotInfo)
+        return self.recv_RobotInfo()
+
+    def send_RobotInfo(self, RobotID, RobotInfo):
+        self._oprot.writeMessageBegin('RobotInfo', TMessageType.CALL, self._seqid)
+        args = RobotInfo_args()
+        args.RobotID = RobotID
+        args.RobotInfo = RobotInfo
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_RobotInfo(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = RobotInfo_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "RobotInfo failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -131,6 +172,7 @@ class Processor(Iface, TProcessor):
         self._processMap["saveRobotData"] = Processor.process_saveRobotData
         self._processMap["ping"] = Processor.process_ping
         self._processMap["say"] = Processor.process_say
+        self._processMap["RobotInfo"] = Processor.process_RobotInfo
 
     def process(self, iprot, oprot):
         (name, type, seqid) = iprot.readMessageBegin()
@@ -216,6 +258,29 @@ class Processor(Iface, TProcessor):
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
+    def process_RobotInfo(self, seqid, iprot, oprot):
+        args = RobotInfo_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = RobotInfo_result()
+        try:
+            result.success = self._handler.RobotInfo(args.RobotID, args.RobotInfo)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("RobotInfo", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
 # HELPER FUNCTIONS AND STRUCTURES
 
 
@@ -284,11 +349,11 @@ class saveRobotData_result(object):
             if fid == 0:
                 if ftype == TType.MAP:
                     self.success = {}
-                    (_ktype1, _vtype2, _size0) = iprot.readMapBegin()
-                    for _i4 in range(_size0):
-                        _key5 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                        _val6 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                        self.success[_key5] = _val6
+                    (_ktype10, _vtype11, _size9) = iprot.readMapBegin()
+                    for _i13 in range(_size9):
+                        _key14 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                        _val15 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success[_key14] = _val15
                     iprot.readMapEnd()
                 else:
                     iprot.skip(ftype)
@@ -305,9 +370,9 @@ class saveRobotData_result(object):
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.MAP, 0)
             oprot.writeMapBegin(TType.STRING, TType.STRING, len(self.success))
-            for kiter7, viter8 in self.success.items():
-                oprot.writeString(kiter7.encode('utf-8') if sys.version_info[0] == 2 else kiter7)
-                oprot.writeString(viter8.encode('utf-8') if sys.version_info[0] == 2 else viter8)
+            for kiter16, viter17 in self.success.items():
+                oprot.writeString(kiter16.encode('utf-8') if sys.version_info[0] == 2 else kiter16)
+                oprot.writeString(viter17.encode('utf-8') if sys.version_info[0] == 2 else viter17)
             oprot.writeMapEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
@@ -553,6 +618,153 @@ class say_result(object):
 all_structs.append(say_result)
 say_result.thrift_spec = (
     (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
+)
+
+
+class RobotInfo_args(object):
+    """
+    Attributes:
+     - RobotID
+     - RobotInfo
+    """
+
+
+    def __init__(self, RobotID=None, RobotInfo=None,):
+        self.RobotID = RobotID
+        self.RobotInfo = RobotInfo
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I32:
+                    self.RobotID = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.RobotInfo = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('RobotInfo_args')
+        if self.RobotID is not None:
+            oprot.writeFieldBegin('RobotID', TType.I32, 1)
+            oprot.writeI32(self.RobotID)
+            oprot.writeFieldEnd()
+        if self.RobotInfo is not None:
+            oprot.writeFieldBegin('RobotInfo', TType.STRING, 2)
+            oprot.writeString(self.RobotInfo.encode('utf-8') if sys.version_info[0] == 2 else self.RobotInfo)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        if self.RobotID is None:
+            raise TProtocolException(message='Required field RobotID is unset!')
+        if self.RobotInfo is None:
+            raise TProtocolException(message='Required field RobotInfo is unset!')
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(RobotInfo_args)
+RobotInfo_args.thrift_spec = (
+    None,  # 0
+    (1, TType.I32, 'RobotID', None, None, ),  # 1
+    (2, TType.STRING, 'RobotInfo', 'UTF8', None, ),  # 2
+)
+
+
+class RobotInfo_result(object):
+    """
+    Attributes:
+     - success
+    """
+
+
+    def __init__(self, success=None,):
+        self.success = success
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.MAP:
+                    self.success = {}
+                    (_ktype19, _vtype20, _size18) = iprot.readMapBegin()
+                    for _i22 in range(_size18):
+                        _key23 = iprot.readI32()
+                        _val24 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success[_key23] = _val24
+                    iprot.readMapEnd()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('RobotInfo_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.MAP, 0)
+            oprot.writeMapBegin(TType.I32, TType.STRING, len(self.success))
+            for kiter25, viter26 in self.success.items():
+                oprot.writeI32(kiter25)
+                oprot.writeString(viter26.encode('utf-8') if sys.version_info[0] == 2 else viter26)
+            oprot.writeMapEnd()
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(RobotInfo_result)
+RobotInfo_result.thrift_spec = (
+    (0, TType.MAP, 'success', (TType.I32, None, TType.STRING, 'UTF8', False), None, ),  # 0
 )
 fix_spec(all_structs)
 del all_structs
