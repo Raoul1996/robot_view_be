@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from rest_framework.schemas import get_schema_view
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
@@ -25,14 +26,16 @@ from users.views import SMSCodeViewSet, UserViewSets
 from info.views import RobotInfoViewSet
 
 router = DefaultRouter()
+schema_view = get_schema_view(title="Server Monitoring API")
 
 router.register(r'users', UserViewSets, base_name='users')
 router.register(r'code', SMSCodeViewSet, base_name='code')
-router.register(r'info',RobotInfoViewSet, base_name='info')
+router.register(r'info', RobotInfoViewSet, base_name='info')
 urlpatterns = [
     path('', include(router.urls)),
     path('docs/', include_docs_urls(title='robot_view documents')),
     path('admin/', admin.site.urls),
+    path('schema/', schema_view),
     path('login/', obtain_jwt_token),
     path('api-auth/', include('rest_framework.urls')),
     path('api-token-auth/', views.obtain_auth_token)

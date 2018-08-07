@@ -69,12 +69,12 @@ if app has very huge number, leave them in the project root path is not a smart 
 1. modify the [`settings.py`](robot_view/settings.py), to configure the apps as resource path
 
 ```python
-+ import os
-  import sys
+import os
+import sys
 
-  # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-   BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-+  sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 ```
 2. if use pycharm, also can mark the `apps` path as `Source Root`, trust me, It's a smart action.
 
@@ -103,8 +103,11 @@ pip install whitenoise
 pip freeze > ./requirements.txt
 ```
 ```python
-+ from whitenoise.django import DjangoWhiteNoise
-+ application = DjangoWhiteNoise(application)
+from whitenoise.django import DjangoWhiteNoise
+from django.core.wsgi import get_wsgi_application
+
+application = get_wsgi_application()
+application = DjangoWhiteNoise(application)
 ```
 3. then run this command:
 
@@ -124,12 +127,18 @@ docker-compose build && docker-compose up -d
 django rest framework already support the docs and schema itself, just [include it and add a urlpatterns](apps/snippets/urls.py) is enough:
 
 ```python
-+ from rest_framework.schemas import get_schema_view
-+ from rest_framework.documentation import include_docs_urls
-  urlpatterns = [
+from rest_framework.schemas import get_schema_view
+from django.urls import path, include
+from rest_framework.documentation import include_docs_urls
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+schema_view = get_schema_view(title="Server Monitoring API")
+
+urlpatterns = [
     path('', include(router.urls)),
-    + path('schema/', schema_view),
-    + path('docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION))
+    path('schema/', schema_view),
+    path('docs/', include_docs_urls(title='doc', description='desc'))
   ]
 ```
 ### Fix list is not callable
@@ -143,24 +152,18 @@ Solution is very easy: use the tuple, don't use list.
 REST_FRAMEWORK = {
      # Use Django's standard `django.contrib.auth` permissions,
      # or allow read-only access for unauthenticated users.
-   -  'DEFAULT_PERMISSION_CLASSES': [
-   +  'DEFAULT_PERMISSION_CLASSES': (
+     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-   + ),
-   - ),
-   - 'DEFAULT_AUTHENTICATION_CLASSES': [
-   + 'DEFAULT_AUTHENTICATION_CLASSES': (
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-   + ),
-   - ],
+    ),
      'PAGE_SIZE': 10,
-   + 'DEFAULT_PAGINATION_CLASS': [
-   - 'DEFAULT_PAGINATION_CLASS': (
+    'DEFAULT_PAGINATION_CLASS': (
         'rest_framework.pagination.PageNumberPagination'
-   + )
-   - ]
+    )
 }
 ```
 ### Change authorization method to JWT
@@ -211,7 +214,7 @@ for rpc, I choose to use apache thrift framework
 
 - management thrift server on localhost 9090
 
-    ```shell
+    ```bash
     # start rpc server
     python manage.py runrpcserver
     ```
@@ -221,18 +224,20 @@ Because I need change the thrift server listen host and port, but `django-thrift
 
 - create `extra_app` folder
 
-    ```shell
+    ```bash
     mkdir extra_app
     ```
 - move the `django-thrift` library from `site-package` to `extra-app`:
 
-    ```shell
+    ```bash
     mv to_your_site_package_path/django-thrift extra_app
     ```
 - add `extra-app` in `PYTHONPATH` via modify the [setting.py](robot_view/settings.py)
 
     ```python
-    + sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
+    import sys, os
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
     ```
 - modify the `django-thrift` source code what you want to edit.
 
@@ -245,8 +250,30 @@ the user Profile data store in `users_userporfile` table, the password field whi
 search in django source code, I find the [`make_password`](https://github.com/django/django/blob/stable%2F2.0.x/django/contrib/auth/hashers.py#L64) function, and when use create superuser, the manage.py don't provide the **salt**, so just use the like [base_user.py](https://github.com/django/django/blob/stable%2F2.0.x/django/contrib/auth/base_user.py#L97):
 
 ```python
+from django.contrib.auth.hashers import make_password
 def validate(self, attrs):
     attrs["raw_password"] = attrs["password"]
     attrs["password"] = make_password(attrs["password"])
     return attrs
+```
+
+### use `Q` and rewrite retrieve method add prop on response
+the minimum code implementation : 
+
+```python
+from django.db.models import Q
+from django.contrib.auth import get_user_model
+from rest_framework import viewsets, status, response
+from rest_framework.mixins import  RetrieveModelMixin
+User = get_user_model()
+
+class ExampleViewSet(RetrieveModelMixin, viewsets.GenericViewSet):
+    def retrieve(self, request, *args, **kwargs):
+        queryset = self.get_object()
+        serializer = self.get_serializer(queryset)
+        re_dict = serializer.data
+        re_dict["username"] = User.objects.get(Q(id=re_dict["user"])).username
+        del re_dict["user"]
+        headers = self.get_success_headers(serializer.data)
+        return response.Response(re_dict, status=status.HTTP_200_OK, headers=headers)
 ```

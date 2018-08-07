@@ -11,7 +11,7 @@ class RobotInfo(models.Model):
         ("plane", "plane")
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="user")
-    name = models.CharField(max_length=255, verbose_name="robot_name", default='neuq_robot')
+    name = models.CharField(max_length=255, verbose_name="robot_name", unique=True)
     type = models.CharField(max_length=100, choices=ROBOT_TYPE, verbose_name="robot_type", default="car")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="add_time")
 
