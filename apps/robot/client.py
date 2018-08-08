@@ -5,6 +5,7 @@ from thrift import Thrift
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
+
 # add gen-py to PYTHONPATH
 sys.path.append('./gen-py')
 
@@ -21,17 +22,18 @@ try:
     # print("client - ping")
     # print("server - " + client.ping())
     #
-    # start_time = time()
     #
     # for x in range(0, 10):
     #     print("client Say: Hello!")
     #     msg = client.say(json.dumps({'v': '100', 's': '3'}))
     #     print("server " + msg)
 
-    # end_time = time() - start_time
-    # print("duration: " + str(end_time))
-    robot_msg = client.RobotInfo(1, json.dumps({'v': '100', 's': '3', 'time': time()}))
-    print(robot_msg)
+    start_time = time()
+    for x in range(0, 10):
+        robot_msg = client.RobotInfo('demo', json.dumps({'v': '100', 's': '3', 'time': time()}))
+        print(robot_msg)
+    end_time = time() - start_time
+    print("duration: " + str(end_time))
     transport.close()
 except Thrift.TException as ex:
     print(ex.message)

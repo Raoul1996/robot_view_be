@@ -277,3 +277,10 @@ class ExampleViewSet(RetrieveModelMixin, viewsets.GenericViewSet):
         headers = self.get_success_headers(serializer.data)
         return response.Response(re_dict, status=status.HTTP_200_OK, headers=headers)
 ```
+
+### use thrift application interface send data to sqlite database 
+
+List Length | time
+------------|-------
+100         | 2s
+100,000     | 206s

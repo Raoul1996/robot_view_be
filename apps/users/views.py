@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
 
-from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, RetrieveModelMixin
@@ -95,7 +95,7 @@ class UserViewSets(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, Gener
         only the user who is authenticated can retrieve the user's detail.
         """
         if self.action == 'retrieve':
-            return [permissions.IsAuthenticated()]
+            return [IsAuthenticated()]
         return []
 
     def create(self, request, *args, **kwargs):
@@ -112,9 +112,16 @@ class UserViewSets(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, Gener
         re_dict = serializer.data
         payload = jwt_payload_handler(user)
         re_dict["token"] = jwt_encode_handler(payload)
-        re_dict["name"] = user.name if user.name else user.username
         headers = self.get_success_headers(serializer.data)
         return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
+
+    def retrieve(self, request, *args, **kwargs):
+        queryset = self.get_object()
+        serializer = self.get_serializer(queryset)
+        re_dict = serializer.data
+        del re_dict["password"]
+        headers = self.get_success_headers(serializer.data)
+        return Response(re_dict, status=status.HTTP_200_OK, headers=headers)
 
     def get_object(self):
         """

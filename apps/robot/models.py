@@ -6,7 +6,7 @@ User = get_user_model()
 
 
 class RobotData(models.Model):
-    robot_id = models.IntegerField(verbose_name="robot_id", null=False, blank=False),
+    name = models.CharField(max_length=100, verbose_name="robot_name", null=False, blank=False)
     data = models.TextField(verbose_name="robot_data", null=False, blank=False)
     add_time = models.DateTimeField(default=datetime.now, verbose_name="add_time")
 
@@ -15,4 +15,4 @@ class RobotData(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.add_time
+        return self.name

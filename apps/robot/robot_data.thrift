@@ -18,5 +18,5 @@ service RobotReceiver {
     map<string,string> saveRobotData(),
     string ping(),
     string say(1:string msg),
-    map<i32,string> RobotInfo(1: required i32 RobotID, 2: required string RobotInfo)
+    map<i32,string> RobotInfo(1: required string RobotName, 2: required string RobotInfo)
 }

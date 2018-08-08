@@ -1,26 +1,28 @@
 import re
 from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password, check_password
-from rest_framework.validators import UniqueValidator
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
+from rest_framework.serializers import ModelSerializer
 from robot_view.settings import REGEX_MOBILE
 from .models import VerifyCode
 
 User = get_user_model()
 
 
-class UserDetailSerializer(serializers.ModelSerializer):
+class UserDetailSerializer(ModelSerializer):
     """
     User Detail Serializer
     """
 
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ["username", "password", "first_name", "last_name",
+                  "gender", "email", "mobile", "is_active", "is_staff"]
 
 
-class UserRegSerializer(serializers.ModelSerializer):
+class UserRegSerializer(ModelSerializer):
     """
     User Register Serializer
     """
@@ -33,6 +35,7 @@ class UserRegSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True,
                                      label="username",
                                      help_text="username",
+                                     write_only=True,
                                      allow_blank=False,
                                      validators=[UniqueValidator(
                                          queryset=User.objects.all(),
@@ -57,17 +60,20 @@ class UserRegSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("verify code is illegal.")
 
     def validate(self, attrs):
-        attrs["raw_password"] = attrs["password"]
         attrs["password"] = make_password(attrs["password"])
         del attrs["code"]
         return attrs
 
+    def create(self, validated_data):
+        return User.objects.create(**validated_data)
+
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ["code", "username", "password", "first_name", "last_name",
+                  "gender", "email", "mobile"]
 
 
-class SMSSerializer(serializers.ModelSerializer):
+class SMSSerializer(ModelSerializer):
     mobile = serializers.CharField(max_length=11)
 
     @staticmethod

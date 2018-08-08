@@ -27,7 +27,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('   saveRobotData()')
     print('  string ping()')
     print('  string say(string msg)')
-    print('   RobotInfo(i32 RobotID, string RobotInfo)')
+    print('   RobotInfo(string RobotName, string RobotInfo)')
     print('')
     sys.exit(0)
 
@@ -129,7 +129,7 @@ elif cmd == 'RobotInfo':
     if len(args) != 2:
         print('RobotInfo requires 2 args')
         sys.exit(1)
-    pp.pprint(client.RobotInfo(eval(args[0]), args[1],))
+    pp.pprint(client.RobotInfo(args[0], args[1],))
 
 else:
     print('Unrecognized method %s' % cmd)

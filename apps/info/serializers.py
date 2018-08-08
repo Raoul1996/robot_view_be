@@ -11,8 +11,8 @@ class RobotCreateSerializer(serializers.ModelSerializer):
                                  label='robot_name',
                                  allow_blank=False,
                                  validators=[UniqueValidator(
-                                     queryset=User.objects.all(),
-                                     message="user is already exist."
+                                     queryset=RobotInfo.objects.all(),
+                                     message="robot is already exist."
                                  )])
 
     class Meta:
