@@ -3,7 +3,8 @@ from django.db.models import Q
 
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from rest_framework import permissions, status
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, ListModelMixin
 from rest_framework.viewsets import GenericViewSet
@@ -23,6 +24,7 @@ class RobotInfoViewSet(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, L
     serializer_class = RobotCreateSerializer
     queryset = RobotInfo.objects.all()
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
         """
@@ -32,11 +34,6 @@ class RobotInfoViewSet(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, L
         if self.action == "create":
             return RobotCreateSerializer
         return RobotDetailSerializer
-
-    def get_permissions(self):
-        if self.action == 'retrieve':
-            return [permissions.IsAuthenticated()]
-        return []
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

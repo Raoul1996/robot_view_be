@@ -6,7 +6,7 @@ User = get_user_model()
 
 
 class RobotData(models.Model):
-    name = models.CharField(max_length=100, verbose_name="robot_name", null=False, blank=False)
+    name = models.CharField(max_length=100, verbose_name="robot_name", null=False, blank=False, help_text=)
     data = models.TextField(verbose_name="robot_data", null=False, blank=False)
     add_time = models.DateTimeField(default=datetime.now, verbose_name="add_time")
 

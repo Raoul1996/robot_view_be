@@ -13,7 +13,7 @@ handler = create_handler()
 
 class RobotDataViewSet(ListModelMixin, RetrieveModelMixin, DestroyModelMixin, GenericViewSet):
     """
-    Robot Data
+    Robot Data ViewSet
     """
     serializer_class = RobotDataSerializer
     queryset = RobotData.objects.all()
@@ -24,7 +24,7 @@ class RobotDataViewSet(ListModelMixin, RetrieveModelMixin, DestroyModelMixin, Ge
 @handler.map_function("RobotInfo")
 def robot_info_handler(robot_name, info):
     """
-
+    robot thrift application interface handler
     :param robot_name: robot name, unique value
     :param info: robot upload information
     :return: return string map
