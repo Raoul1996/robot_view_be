@@ -1,4 +1,4 @@
-# robot_view_be
+# robot\_view\_be
 
 > robot attachment viewer backend
 
@@ -252,7 +252,8 @@ search in django source code, I find the [`make_password`](https://github.com/dj
 ```python
 from django.contrib.auth.hashers import make_password
 def validate(self, attrs):
-    attrs["raw_password"] = attrs["password"]
+    # because the limit from serializer, add 'raw_password' prop is forbidden.
+    # attrs["raw_password"] = attrs["password"]
     attrs["password"] = make_password(attrs["password"])
     return attrs
 ```
