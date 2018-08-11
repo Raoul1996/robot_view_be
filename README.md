@@ -50,7 +50,7 @@ use docker can make deploy more easy than before, and use the same system env ca
 2. create the [`.travis.yml`](.travis.yml) in project
 3. add the ssh key by this command, in order to deploy the code to server
 
-```shell
+```bash
 travis encrypt-file ~/.ssh/id_rsa --add
 ```
 ### split the settings file for dev env and production env
@@ -186,7 +186,7 @@ for rpc, I choose to use apache thrift framework
 
 - install `django-thrift`:
 
-    ```shell
+    ```bash
     pip install django-thrift
     ```
 - configure `django-thrift` in [setting.py](robot_view/settings.py)
@@ -285,3 +285,19 @@ List Length | time
 ------------|-------
 100         | 2s
 100,000     | 206s
+
+### nginx configuration
+
+```nginx
+server {
+  listen 80;
+  server_name robot.raoul1996.cn;
+  root /usr/share/nginx/html/robot;
+  location / {
+  } 
+  location ~* ^/api|static/ {
+    rewrite ^/api/(.*) /$1 break;
+    proxy_pass http://your_ip:your_port;
+  } 
+}
+```
