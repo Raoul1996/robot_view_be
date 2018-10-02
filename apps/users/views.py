@@ -86,7 +86,7 @@ class UserViewSets(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, Gener
         get the current serializer class,
         if the action type is create, return the register serializer
         """
-        if self.action == "create":
+        if self.action == "create" or self.action == "update":
             return UserRegSerializer
         return UserDetailSerializer
 
