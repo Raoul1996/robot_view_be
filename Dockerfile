@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.6
 
 MAINTAINER Dockerfiles
 
@@ -9,6 +9,7 @@ RUN apt-get update && \
     apt-get install -y \
         git \
         supervisor \
+        gcc \
         nginx &&\
     rm -rf /var/lib/apt/lists/*
 
@@ -27,7 +28,8 @@ COPY service/django-uwsgi-nginx/supervisor-app.conf /etc/supervisor/conf.d/
 # install the three-part lib
 
 COPY requirements.txt /code/robot/
-RUN pip3 install -r /code/robot/requirements.txt -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
+#RUN pip3 install -r /code/robot/requirements.txt -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
+RUN pip3 install -r /code/robot/requirements.txt
 
 # uwsgi.ini and uwsgi_params
 
