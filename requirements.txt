@@ -33,7 +33,7 @@ openpyxl==2.5.4
 Pillow==4.1.1
 ply==3.11
 psycopg2-binary==2.7.5
-Pygments==2.2.0
+Pygments==2.7.4
 PyJWT==1.6.4
 pytz==2018.4
 PyYAML==3.13
